@@ -421,22 +421,47 @@ export class McpManager {
       if (result.content.length === 0) {
         throw new Error('Tool call returned no content')
       }
-      if (result.content[0].type !== 'text') {
+      const combinedText = result.content
+        .map((content) => {
+          if (content.type === 'text') {
+            return content.text
+          }
+          if (content.type === 'resource') {
+            const resource = content.resource
+            const header = resource.uri
+              ? `Resource: ${resource.uri}`
+              : 'Resource'
+            const payload =
+              typeof resource.text === 'string' && resource.text.length > 0
+                ? resource.text
+                : resource.blob
+                  ? `[binary ${resource.mimeType ?? 'resource'} payload]`
+                  : `[resource ${resource.mimeType ?? 'payload'}]`
+            return `${header}\n${payload}`
+          }
+          return null
+        })
+        .filter((value): value is string => value !== null)
+        .join('\n')
+      const unsupportedContent = result.content.find(
+        (content) => content.type !== 'text' && content.type !== 'resource',
+      )
+      if (unsupportedContent) {
         throw new Error(
-          `Tool result with content type ${result.content[0].type} is not currently supported.`,
+          `Tool result with content type ${unsupportedContent.type} is not currently supported.`,
         )
       }
       if (result.isError) {
         return {
           status: ToolCallResponseStatus.Error,
-          error: result.content[0].text,
+          error: combinedText,
         }
       }
       return {
         status: ToolCallResponseStatus.Success,
         data: {
           type: 'text',
-          text: result.content[0].text,
+          text: combinedText,
         },
       }
     } catch (error) {
