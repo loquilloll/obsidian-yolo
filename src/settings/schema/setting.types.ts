@@ -340,6 +340,7 @@ export const smartComposerSettingsSchema = z.object({
         DEFAULT_CHAT_MODELS.find((v) => v.id === DEFAULT_APPLY_MODEL_ID)?.id ??
         DEFAULT_CHAT_MODELS[0].id,
       tabCompletionOptions: { ...DEFAULT_TAB_COMPLETION_OPTIONS },
+      tabCompletionTriggers: [...DEFAULT_TAB_COMPLETION_TRIGGERS],
       tabCompletionSystemPrompt: DEFAULT_TAB_COMPLETION_SYSTEM_PROMPT,
       smartSpaceQuickActions: undefined,
       smartSpaceTriggerMode: 'single-space',
