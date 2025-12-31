@@ -43,3 +43,7 @@ By implementing this shim, we can use PGlite (an ESM module) within our CommonJS
 ## Memory Leak During Plugin Reloading
 
 A memory leak has been identified when reloading the plugin. This may not be critical for end-users who typically don't reload the plugin frequently, but it can become problematic for developers who reload often during the development process. If you experience Obsidian becoming unresponsive or slow after reloading the plugin multiple times, it may be due to this memory leak. We are actively investigating the root cause and working on potential fixes. Any reports or fixes in this area are appreciated.
+
+## MCP Tool Response Handling
+
+MCP tool calls can return multiple content items, including plain text and resource payloads. The MCP client consolidates these into a single text response by joining text blocks and rendering resource items as a header plus payload (URI and text when available, or a binary placeholder). This prevents tool calls like `github:get_file_contents` from failing when the server returns `resource` content.
