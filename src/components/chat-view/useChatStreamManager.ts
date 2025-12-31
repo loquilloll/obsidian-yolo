@@ -15,6 +15,7 @@ import { getChatModelClient } from '../../core/llm/manager'
 import { ChatMessage } from '../../types/chat'
 import { ConversationOverrideSettings } from '../../types/conversation-settings.types'
 import { PromptGenerator } from '../../utils/chat/promptGenerator'
+import { getFirstEnabledChatModelId } from '../../utils/chat-model-utils'
 import { ResponseGenerator } from '../../utils/chat/responseGenerator'
 import { ErrorModal } from '../modals/ErrorModal'
 
@@ -66,10 +67,13 @@ export function useChatStreamManager({
         if (settings.chatModels.length === 0) {
           throw error
         }
-        // Fallback to the first chat model if the selected chat model is not found
-        const firstChatModel = settings.chatModels[0]
+        // Fallback to the first enabled chat model if the selected chat model is not found
+        const fallbackModelId = getFirstEnabledChatModelId(settings.chatModels)
+        if (!fallbackModelId) {
+          throw error
+        }
         // Do NOT write back to global settings here; just use fallback locally
-        return getChatModelClient({ settings, modelId: firstChatModel.id })
+        return getChatModelClient({ settings, modelId: fallbackModelId })
       }
       throw error
     }

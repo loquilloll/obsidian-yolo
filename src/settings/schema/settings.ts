@@ -3,6 +3,7 @@ import {
   SmartComposerSettings,
   smartComposerSettingsSchema,
 } from './setting.types'
+import { resolveEnabledChatModelId } from '../../utils/chat-model-utils'
 
 function migrateSettings(
   data: Record<string, unknown>,
@@ -33,10 +34,36 @@ export function parseSmartComposerSettings(
   try {
     const migratedData = migrateSettings(data as Record<string, unknown>)
     const parsed = smartComposerSettingsSchema.parse(migratedData)
-    return { ...parsed, version: SETTINGS_SCHEMA_VERSION }
+    const chatModelId = resolveEnabledChatModelId(
+      parsed.chatModels,
+      parsed.chatModelId,
+    )
+    const applyModelId = resolveEnabledChatModelId(
+      parsed.chatModels,
+      parsed.applyModelId,
+    )
+    return {
+      ...parsed,
+      version: SETTINGS_SCHEMA_VERSION,
+      chatModelId,
+      applyModelId,
+    }
   } catch (error) {
     console.warn('Invalid settings provided, using defaults:', error)
     const defaults = smartComposerSettingsSchema.parse({})
-    return { ...defaults, version: SETTINGS_SCHEMA_VERSION }
+    const chatModelId = resolveEnabledChatModelId(
+      defaults.chatModels,
+      defaults.chatModelId,
+    )
+    const applyModelId = resolveEnabledChatModelId(
+      defaults.chatModels,
+      defaults.applyModelId,
+    )
+    return {
+      ...defaults,
+      version: SETTINGS_SCHEMA_VERSION,
+      chatModelId,
+      applyModelId,
+    }
   }
 }
