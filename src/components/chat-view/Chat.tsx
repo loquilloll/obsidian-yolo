@@ -671,12 +671,12 @@ const Chat = forwardRef<ChatRef, ChatProps>((props, ref) => {
     generateConversationTitle,
   ])
 
-  // 当切换对话时，清除命名标记（如果对话标题还是"新消息"）
+  // Clear the naming flag when switching conversations if title is still "New message".
   useEffect(() => {
     // 如果切换到新对话，清除该对话的命名标记
     if (currentConversationId) {
       const conversation = chatList.find((c) => c.id === currentConversationId)
-      if (conversation && conversation.title === '新消息') {
+      if (conversation && conversation.title === 'New message') {
         titleGeneratedRef.current.delete(currentConversationId)
       }
     }

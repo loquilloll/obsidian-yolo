@@ -99,8 +99,8 @@ export function useChatHistory(): UseChatHistory {
                   : overrides,
             })
           } else {
-            // 默认标题统一为"新消息"，待第一轮模型回答完成后由工具模型自动改名
-            const defaultTitle = '新消息'
+            // Default title is "New message" until renamed after the first model response.
+            const defaultTitle = 'New message'
 
             await chatManager.createChat({
               id,
@@ -184,8 +184,8 @@ export function useChatHistory(): UseChatHistory {
         return
       }
 
-      // 如果标题已经不是"新消息"，说明已经命名过了，不需要再次命名
-      if (conversation.title !== '新消息') {
+      // If the title is already not "New message", it has been named already.
+      if (conversation.title !== 'New message') {
         return
       }
 

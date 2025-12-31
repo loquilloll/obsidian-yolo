@@ -35,7 +35,7 @@ Here’s a glimpse of YOLO’s core capabilities. Explore the plugin for more de
 
 https://github.com/user-attachments/assets/90bbd4f5-b73a-41b4-bf7d-85a5f44659ec
 
-Seamless conversations with LLMs, with context injection, preset prompts, custom providers, and smart Markdown parsing/generation.
+Seamless conversations with LLMs, with context injection, preset prompts, custom providers, and smart Markdown parsing/generation. New chats start with the default title "New message" until the first response renames them.
 
 ## **🧠 Knowledge Base Q&A**
 
